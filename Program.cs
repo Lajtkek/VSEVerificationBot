@@ -22,21 +22,23 @@ var config = new ConfigurationBuilder()
 
 var socketConfig = new DiscordSocketConfig()
 {
-    GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+    //GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
 };
 
 var socketClient = new DiscordSocketClient(socketConfig);
 
 var services = builder.Services
     .AddSingleton(socketClient)
+    .AddSingleton<InteractionService>()
     .AddSingleton<CommandHandler>()
+    .AddSingleton(config)
     .BuildServiceProvider();
 
 _client = services.GetRequiredService<DiscordSocketClient>();
 _commands = services.GetRequiredService<InteractionService>();
 _config = services.GetRequiredService<IConfigurationRoot>();
 
-_testGuildId = _config.GetSection("testGuildId").Get<ulong>();
+_testGuildId = _config.GetSection("TestGuidId").Get<ulong>();
 
 _client.Log += LogAsync;
 _commands.Log += LogAsync;
